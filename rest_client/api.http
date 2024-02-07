@@ -1,0 +1,61 @@
+@host = {{$dotenv HOST}}
+@port = {{$dotenv PORT}}
+@contentType = application/json
+
+# @name login
+POST http://{{host}}:{{port}}/login
+Content-Type: {{contentType}}
+
+{
+    "username": "kminchelle",
+    "password": "0lelplR"
+}
+
+### Set token
+@token={{ login.response.body.$.token}}
+
+###
+
+# @name getAllProducts
+GET http://{{host}}:{{port}}/product?limit=5&skip=0&dato=abc
+Authorization: Bearer {{token}}
+
+###
+
+# @name getByIdProduct
+GET http://{{host}}:{{port}}/product/1
+Authorization: Bearer {{token}}
+
+###
+
+# @name insertProduct
+POST http://{{host}}:{{port}}/product
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+    "title": "BMW Pencil Blue",
+    "description": "A pencil",
+    "price": 1.20,
+    "stock": 100
+}
+
+###
+
+# @name updateProduct
+PATCH http://{{host}}:{{port}}/product/1
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+    "title": "iPhone 9+",
+    "description": "An apple mobile",
+    "price": 549,
+    "stock": 100
+}
+
+###
+
+# @name deleteProduct
+DELETE http://{{host}}:{{port}}/product/1
+Authorization: Bearer {{token}}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Rest</title>
+    <style>
+        article {
+          border: 1px solid #ccc;
+          padding: 1rem;
+          margin-bottom: 1rem;
+        }
+    
+        img {
+          height: auto;
+          width: 320px;
+          max-width: 100%;
+        }
+      </style>
+    <script type="module">
+        fetch('http://127.0.0.1:3000/product?limit=5&skip=0', {
+            headers: {
+                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInVzZXJuYW1lIjoia21pbmNoZWxsZSIsImVtYWlsIjoia21pbmNoZWxsZUBxcS5jb20iLCJmaXJzdE5hbWUiOiJKZWFubmUiLCJsYXN0TmFtZSI6IkhhbHZvcnNvbiIsImdlbmRlciI6ImZlbWFsZSIsImltYWdlIjoiaHR0cHM6Ly9yb2JvaGFzaC5vcmcvYXV0cXVpYXV0LnBuZyIsImlhdCI6MTcwMjE2MDE3OSwiZXhwIjoxNzAyMTYzNzc5fQ.uEUmHI7zNy0ySc2OJaLOAfrXwAb_AVk0n7pQDGIl8P4`
+            }
+        })
+        .then(res => res.json())
+        .then(({ data: { products } }) => {
+            const html = products.map(product => {
+                return `
+                    <article data-id="${product.id}">
+                    <h2>${product.title}</h2>
+                    <img src="${product.images[0]}" alt="${product.title}">
+                    <p>${product.description}</p>
+
+                    <button>Delete</button>
+                    </article>
+                `
+            }).join('');
+
+            document.querySelector('main').innerHTML = html;
+
+            document.addEventListener('click', e => {
+                if (e.target.matches('button')) {
+                    const article = e.target.closest('article')
+                    const id = article.dataset.id
+
+                    fetch(`http://127.0.0.1:3000/product/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInVzZXJuYW1lIjoia21pbmNoZWxsZSIsImVtYWlsIjoia21pbmNoZWxsZUBxcS5jb20iLCJmaXJzdE5hbWUiOiJKZWFubmUiLCJsYXN0TmFtZSI6IkhhbHZvcnNvbiIsImdlbmRlciI6ImZlbWFsZSIsImltYWdlIjoiaHR0cHM6Ly9yb2JvaGFzaC5vcmcvYXV0cXVpYXV0LnBuZyIsImlhdCI6MTcwMjE2MDE3OSwiZXhwIjoxNzAyMTYzNzc5fQ.uEUmHI7zNy0ySc2OJaLOAfrXwAb_AVk0n7pQDGIl8P4`
+                        }
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            article.remove()
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <main></main>
+</body>
+</html>
