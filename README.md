@@ -1,7 +1,7 @@
-# API REST DummyJSON Products
+# DummyJSON Products REST API
 
 ## Overview
-* Endpoints login and CRUD Products.
+* Endpoints login and Products CRUD.
 * Used fake REST API DummyJSON.
 * Schema validation with Zod.
 * CORS Middleware with urls white list.
